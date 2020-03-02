@@ -37,6 +37,12 @@
           [(ngModel)]="searchStr"
           (keyup)="onSearch()"
         />
+        <input
+          id="btnCreateContact"
+          type="button"
+          (click)="openTemplate(contentCreate)"
+          value="Tạo danh bạ"
+        />
         <mat-accordion>
           <mat-expansion-panel *ngFor="let item of list" id="myPanel">
             <mat-expansion-panel-header *ngIf="item.models.length > 0">
@@ -112,6 +118,61 @@
   </mat-card>
 </div>
 
+<!--template comfirm Thêm contact-->
+<ng-template #contentCreate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Tạo danh bạ</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="closeCreateContact(); modal.close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="row">
+      <div class="col-md-12 text-center">
+        <label for="file-input">
+          <mat-card-title >
+            <img src="http://apialoha2.vpmedia.vn/img/user_ic_defaul.png" class="img-fluid avt avt-edit" />
+            <div class="avt-overlay avt"><span class="fa fa-edit"
+                style="color: white; top: 50%; -webkit-transform: translate(0%,150%); transform: translate(0%, 150%);"></span>
+            </div>
+          </mat-card-title>
+          <input type="file" id="file-input" style="display: none;" accept="image" />
+        </label>
+      </div>
+
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Tên danh bạ</mat-label>
+          <input matInput [(ngModel)]="createCont.FullName" [ngModelOptions]="{ standalone: true }" />
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Số điện thoại</mat-label>
+          <input matInput [(ngModel)]="createCont.Phone" [ngModelOptions]="{ standalone: true }" />
+          <mat-icon matSuffix>phone</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="createCont.Email" [ngModelOptions]="{ standalone: true }" />
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="createContact()"
+    >
+      Lưu
+    </button>
+  </div>
+</ng-template>
+
 <!--template comfirm Sửa contact-->
 <ng-template #contentEdit let-modal>
   <div class="modal-header">
@@ -131,12 +192,8 @@
 
       <div class="col-md-12 text-center">
         <label for="file-input">
-          <mat-card-title *ngIf="m.Avatar != 'http://apialoha2.vpmedia.vn/uploads/'"><img src="{{ m.Avatar }}"
-              class="img-fluid avt avt-edit" />
-          </mat-card-title>
-
-          <mat-card-title *ngIf="m.Avatar == 'http://apialoha2.vpmedia.vn/uploads/'"><img
-              src="http://apialoha2.vpmedia.vn/img/user_ic_defaul.png" class="img-fluid avt avt-edit" />
+          <mat-card-title>
+            <img src="http://apialoha2.vpmedia.vn/img/user_ic_defaul.png" class="img-fluid avt avt-edit" />
             <div class="avt-overlay avt"><span class="fa fa-edit"
                 style="color: white; top: 50%; -webkit-transform: translate(0%,150%); transform: translate(0%, 150%);"></span>
             </div>

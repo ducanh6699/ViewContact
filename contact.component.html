@@ -1,0 +1,189 @@
+<div class="row">
+  <mat-tab-group>
+    <mat-tab label="Nhật ký cuộc gọi">
+      <div class="example-container1">
+        <mat-card *ngFor="let item of listHistory; let i=index">
+          <div class="row">
+            <div class="col-md-4">
+              <img class="avt-history" *ngIf="item.Avatar != null || item.Avatar != ''"
+                src="{{item.Avatar}}" alt="">
+              <img class="avt-history" *ngIf="item.Avatar == null || item.Avatar == ''"
+                src="http://apialoha2.vpmedia.vn/img/user_ic_defaul.png" alt="">
+            </div>
+
+            <div class="col-md-8" style="padding: 0;">
+              <mat-card-subtitle *ngIf="item.Name == null || item.Name == ''">
+                {{item.Phone}}
+              </mat-card-subtitle>
+              <mat-card-subtitle *ngIf="item.Name != null || item.Name != ''">
+
+              </mat-card-subtitle>
+
+              <mat-icon class="mat-icon-history mat-icon-received" *ngIf="item.Type == 1">call_received</mat-icon>
+              <mat-icon class="mat-icon-history mat-icon-made" *ngIf="item.Type == 2">call_made</mat-icon>
+              <mat-icon class="mat-icon-history mat-icon-missed" *ngIf="item.Type == 3">call_missed</mat-icon>
+              <span>{{item.DateCreate}}</span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Danh bạ">
+      <div class="col-md-3 example-container1">
+        <input
+          id="searchContact"
+          placeholder="Search for names.."
+          [(ngModel)]="searchStr"
+          (keyup)="onSearch()"
+        />
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let item of list" id="myPanel">
+            <mat-expansion-panel-header *ngIf="item.models.length > 0">
+              <mat-panel-title>
+                {{ item.cc.toUpperCase() }}
+              </mat-panel-title>
+              <mat-panel-description>
+                <small>{{ item.models.length }}</small>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p *ngFor="let i of item.models">
+              <!--*ngIf="(onSearch(searchStr,i.FullName) || onSearch(searchStr,i.Phone)) && searchStr != ''"
+                *ngIf="onSearch(i.FullName,i.Phone)"
+                -->
+              <mat-card (click)="onClick(i)">{{ i.FullName }}</mat-card>
+            </p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!--Hiển thị thông tin một contact-->
+  <mat-card class="col-md-6" *ngIf="m">
+    <div class="ct-head col-md-12">
+      <div class="mat-card-icon text-right col-md-2 float-right" style="vertical-align: middle;">
+        <span class="fa fa-edit" (click)="openTemplate(contentEdit)"></span>
+        <span style="font-size: 23px;" class="fa fa-trash" (click)="openTemplate(contentDel)"></span>
+      </div>
+      <br />
+      <br />
+      <mat-card-title *ngIf="m.Avatar != 'http://apialoha2.vpmedia.vn/uploads/'"
+        ><img src="{{ m.Avatar }}" class="img-fluid avt"
+      /></mat-card-title>
+
+      <mat-card-title *ngIf="m.Avatar == 'http://apialoha2.vpmedia.vn/uploads/'"
+        ><img
+          src="http://apialoha2.vpmedia.vn/img/user_ic_defaul.png"
+          class="img-fluid avt"
+        />
+      </mat-card-title>
+      <mat-card-title style="color: white;" class="row">
+        <p *ngIf="m.FullName != null">{{ m.FullName }}</p>
+        <p *ngIf="m.FullName == null">(No name)</p>
+      </mat-card-title>
+    </div>
+
+    <mat-card class="mat-card-border">
+      <div class="row">
+        <div class="col-md-10">
+          <mat-card-subtitle>Phone</mat-card-subtitle>
+          <mat-card-title>{{ m.Phone }}</mat-card-title>
+        </div>
+
+        <mat-card-title class="text-right col-md-2 align-self-center">
+          <mat-icon class="mat-icon-detail">call</mat-icon>
+        </mat-card-title>
+      </div>
+    </mat-card>
+
+    <mat-card *ngIf="m.Email != null" class="mat-card-border">
+      <div class="row">
+        <div class="col-md-10">
+          <mat-card-subtitle>Email</mat-card-subtitle>
+          <mat-card-title>{{ m.Email }}</mat-card-title>
+        </div>
+
+        <mat-card-title class="text-right col-md-2 align-self-center">
+          <mat-icon class="mat-icon-detail">email</mat-icon>
+        </mat-card-title>
+      </div>
+    </mat-card>
+  </mat-card>
+</div>
+
+<!--template comfirm Sửa contact-->
+<ng-template #contentEdit let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Sửa danh bạ</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="closeEditContact(); modal.close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="row">
+
+
+      <div class="col-md-12 text-center">
+        <label for="file-input">
+          <mat-card-title *ngIf="m.Avatar != 'http://apialoha2.vpmedia.vn/uploads/'"><img src="{{ m.Avatar }}"
+              class="img-fluid avt avt-edit" />
+          </mat-card-title>
+
+          <mat-card-title *ngIf="m.Avatar == 'http://apialoha2.vpmedia.vn/uploads/'"><img
+              src="http://apialoha2.vpmedia.vn/img/user_ic_defaul.png" class="img-fluid avt avt-edit" />
+            <div class="avt-overlay avt"><span class="fa fa-edit"
+                style="color: white; top: 50%; -webkit-transform: translate(0%,150%); transform: translate(0%, 150%);"></span>
+            </div>
+          </mat-card-title>
+          <input type="file" id="file-input" style="display: none;" accept="image" />
+        </label>
+      </div>
+
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Tên danh bạ</mat-label>
+          <input matInput [(ngModel)]="editContact.FullName" [ngModelOptions]="{ standalone: true }" />
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Số điện thoại</mat-label>
+          <input matInput [(ngModel)]="editContact.Phone" [ngModelOptions]="{ standalone: true }" />
+          <mat-icon matSuffix>phone</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="editContact.Email" [ngModelOptions]="{ standalone: true }" />
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="updateContact()"
+    >
+      Lưu
+    </button>
+  </div>
+</ng-template>
+
+<!--template comfirm Xóa contact-->
+<ng-template #contentDel let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Xác nhận xóa danh bạ</h4>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">
+      Hủy
+    </button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">
+      Xóa
+    </button>
+  </div>
+</ng-template>

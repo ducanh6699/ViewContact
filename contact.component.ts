@@ -11,6 +11,7 @@ import {
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationEnd } from '@angular/router';
 import { IHistoryForContactModel, IHistoryCallSearchModel } from 'src/app/interfaces/IHistoryCallModel';
+import { IconsModule } from 'angular-bootstrap-md';
 
 @Component({
   selector: "app-contact",
@@ -24,7 +25,9 @@ export class ContactComponent implements OnInit {
   uid: string;
   code: string;
   list: IContactModel[];
+  cloneList : IContactModel[];
   count = 1;
+  selectFile : any;
   m: Icontact;
   listHistory: IHistoryForContactModel[];
   d: IHistoryCallSearchModel;
@@ -62,6 +65,10 @@ export class ContactComponent implements OnInit {
       this.list = data.data;
     });
 
+    this.contactService.getAllSX(this.uid, this.code).subscribe(data => {
+      this.cloneList = data.data;
+    });
+
     this.contactService.getAllHistory(this.uid, this.code).subscribe(data => {
       this.listHistory = data.data;
     });
@@ -75,17 +82,17 @@ export class ContactComponent implements OnInit {
     this.editContact.Phone = this.m.Phone;
   }
 
-  onSearch() {
+    onSearch() {
     if (this.searchStr.length > 0) {
       console.log("onSearch start! count: " + this.count);
       this.count++;
-      for (let item of this.list) {
-        item.models = item.models.filter(res => {
+      for (let index = 0; index < this.list.length; index++) {
+        this.cloneList[index].models = this.list[index].models.filter(res => {
           return (
-            res.FullName != null &&
-            res.FullName != "" &&
-            res.Phone != null &&
-            res.Phone.toString() != "" &&
+            ((res.FullName != null &&
+            res.FullName != "") ||
+            (res.Phone != null &&
+            res.Phone.toString() != "")) &&
             (res.FullName.toLocaleUpperCase().match(
               this.searchStr.toLocaleUpperCase()
             ) ||
@@ -94,8 +101,13 @@ export class ContactComponent implements OnInit {
         });
       }
       console.log("onSearch done!");
-    } else {
-      this.ngOnInit();
+    }
+    else {
+      for (let index = 0; index < this.list.length; index++) {
+        this.cloneList[index].models = this.list[index].models.filter(res => {
+          return (true);
+        });
+      }
     }
   }
 
@@ -132,17 +144,17 @@ export class ContactComponent implements OnInit {
     // this.contactService.checkExistPhone(this.uid,this.editContact.Phone).subscribe(data => {
     //   console.log(data)
     // });
+    // this.contactService.uploadAvatarContact(this.selectFile).subscribe(data => {
+    //   if (data.data == true) {
+    //   }
+    // });
 
     this.contactService.UpdateContact(this.editContact).subscribe(data => {
-      console.log(data);
       if (data.data == true) {
         window.location.reload();
       }
-      console.log(data.message);
-      console.log(data.message);
     });
     console.log("updateContact done!");
-
   }
 
   createContact() {
@@ -168,5 +180,10 @@ export class ContactComponent implements OnInit {
         window.location.reload();
       }
     });
+  }
+
+  onEditAvatar(event: any) {
+    this.selectFile = event.target.files[0];
+    console.log(this.selectFile);
   }
 }

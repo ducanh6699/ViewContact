@@ -32,10 +32,10 @@
     <mat-tab label="Danh bạ">
       <div class="col-md-3 example-container1">
         <input
-          id="searchContact"
-          placeholder="Search for names.."
-          [(ngModel)]="searchStr"
-          (keyup)="onSearch()"
+        id="searchContact"
+        placeholder="Tìm tên hoặc số điện thoại..."
+        [(ngModel)]="searchStr"
+        (keyup) = "onSearch()"
         />
         <input
           id="btnCreateContact"
@@ -44,7 +44,7 @@
           value="Tạo danh bạ"
         />
         <mat-accordion>
-          <mat-expansion-panel *ngFor="let item of list" id="myPanel">
+          <mat-expansion-panel *ngFor="let item of cloneList" id="myPanel">
             <mat-expansion-panel-header *ngIf="item.models.length > 0">
               <mat-panel-title>
                 {{ item.cc.toUpperCase() }}
@@ -198,7 +198,7 @@
                 style="color: white; top: 50%; -webkit-transform: translate(0%,150%); transform: translate(0%, 150%);"></span>
             </div>
           </mat-card-title>
-          <input type="file" id="file-input" style="display: none;" accept="image" />
+          <input type="file" id="file-input" style="display: none;" accept="image" (change) = "onEditAvatar($event)" />
         </label>
       </div>
 
@@ -239,7 +239,7 @@
     <button type="button" class="btn btn-outline-dark" (click)="modal.close()">
       Hủy
     </button>
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">
+    <button type="button" class="btn btn-outline-dark" (click)="deleteContact()">
       Xóa
     </button>
   </div>

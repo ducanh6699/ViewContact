@@ -22,19 +22,25 @@
   font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border-radius: 25px;
 }
 
+#btnCreateContact:hover {
+  background-color: #f0f0f066;
+}
+
 #searchContact {
-  background-image: url("https://www.w3schools.com/css/searchicon.png");
+  background-image: url("http://icons.iconarchive.com/icons/iconsmind/outline/24/Search-People-icon.png");
   background-position: 10px 12px;
   background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 12px 20px 12px 40px;
+  font-size: 15px;
+  padding: 14px 10px 13px 40px;
   border: 1px solid #ddd;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border-radius: 25px;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .avt {

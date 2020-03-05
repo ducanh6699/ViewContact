@@ -2,7 +2,13 @@
   <mat-tab-group>
     <mat-tab label="Nhật ký cuộc gọi">
       <div class="example-container1">
-        <mat-card *ngFor="let item of listHistory; let i=index">
+        <input
+        id="searchContact"
+        placeholder="Tìm nhật ký số điện thoại..."
+        [(ngModel)]="searchStrHCall"
+        (keyup) = "onSearchHCall()"
+        />
+        <mat-card *ngFor="let item of cloneListHistory; let i=index">
           <div class="row">
             <div class="col-md-4">
               <img class="avt-history" *ngIf="item.Avatar != null || item.Avatar != ''"
@@ -34,8 +40,8 @@
         <input
         id="searchContact"
         placeholder="Tìm tên hoặc số điện thoại..."
-        [(ngModel)]="searchStr"
-        (keyup) = "onSearch()"
+        [(ngModel)]="searchStrContact"
+        (keyup) = "onSearchContact()"
         />
         <input
           id="btnCreateContact"

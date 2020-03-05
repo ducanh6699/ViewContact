@@ -27,9 +27,10 @@ export class ContactComponent implements OnInit {
   list: IContactModel[];
   cloneList : IContactModel[];
   count = 1;
-  selectFile : any;
+  selectFile : File;
   m: Icontact;
   listHistory: IHistoryForContactModel[];
+  cloneListHistory: IHistoryForContactModel[];
   d: IHistoryCallSearchModel;
   editContact: UpdateIcontact = {
     Id: undefined,
@@ -47,7 +48,8 @@ export class ContactComponent implements OnInit {
     ProjectCode: undefined,
     IdUser: undefined
   }
-  searchStr = "";
+  searchStrContact = "";
+  searchStrHCall = "";
 
   constructor(
     private modalService: NgbModal,
@@ -72,6 +74,9 @@ export class ContactComponent implements OnInit {
     this.contactService.getAllHistory(this.uid, this.code).subscribe(data => {
       this.listHistory = data.data;
     });
+    this.contactService.getAllHistory(this.uid, this.code).subscribe(data => {
+      this.cloneListHistory = data.data;
+    });
   }
 
   onClick(model: Icontact) {
@@ -82,9 +87,9 @@ export class ContactComponent implements OnInit {
     this.editContact.Phone = this.m.Phone;
   }
 
-    onSearch() {
-    if (this.searchStr.length > 0) {
-      console.log("onSearch start! count: " + this.count);
+  onSearchContact() {
+    if (this.searchStrContact.length > 0) {
+      console.log("onSearchContact start! count: " + this.count);
       this.count++;
       for (let index = 0; index < this.list.length; index++) {
         this.cloneList[index].models = this.list[index].models.filter(res => {
@@ -94,13 +99,13 @@ export class ContactComponent implements OnInit {
             (res.Phone != null &&
             res.Phone.toString() != "")) &&
             (res.FullName.toLocaleUpperCase().match(
-              this.searchStr.toLocaleUpperCase()
+              this.searchStrContact.toLocaleUpperCase()
             ) ||
-              res.Phone.toString().match(this.searchStr))
+              res.Phone.toString().match(this.searchStrContact))
           );
         });
       }
-      console.log("onSearch done!");
+      console.log("onSearchContact done!");
     }
     else {
       for (let index = 0; index < this.list.length; index++) {
@@ -111,9 +116,27 @@ export class ContactComponent implements OnInit {
     }
   }
 
+  onSearchHCall() {
+    if (this.searchStrHCall.length > 0) {
+      console.log("onSearchHCall start! count: " + this.count);
+      this.count++;
+      this.cloneListHistory = this.listHistory.filter(res => {
+        return (
+          ((res.Phone != null &&
+          res.Phone.toString() != "")) && res.Phone.toString().match(this.searchStrHCall)
+        );
+      });
+      console.log("onSearchHCall done!");
+    }
+    else {
+      this.cloneListHistory = this.listHistory.filter(res => {
+        return (true);
+      });
+    }
+  }
+
   openTemplate(content: any) {
     this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
-    console.log(this.list);
   }
 
   closeEditContact() {
@@ -126,7 +149,7 @@ export class ContactComponent implements OnInit {
   }
 
   closeCreateContact() {
-    // khôi phục lại dữ liệu hiển thị khi người dùng bấm 'X' cửa số Edit
+    // khôi phục lại dữ liệu hiển thị khi người dùng bấm 'X' cửa số Tạo
     console.log("closeCreateContact start!");
     this.createCont.FullName = "";
     this.createCont.Email = "";
